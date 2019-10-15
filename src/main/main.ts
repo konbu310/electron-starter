@@ -1,0 +1,46 @@
+import { app, BrowserWindow } from "electron";
+import { createMainWindow } from "./windowManager";
+
+app.setName("Electron Starter");
+
+let mainWindow: BrowserWindow | null = null;
+
+// ______________________________________________________
+//
+// @ Ready
+//
+app.on("ready", async () => {
+  mainWindow = createMainWindow();
+
+  mainWindow.on("close", () => {
+    mainWindow = null;
+  });
+});
+
+// ______________________________________________________
+//
+// @ Activate
+//
+app.on("activate", () => {
+  if (mainWindow) {
+    app.show();
+  } else {
+    createMainWindow();
+  }
+});
+
+// ______________________________________________________
+//
+// @ Quit
+//
+app.on("quit", () => {
+  app.quit();
+});
+
+// ______________________________________________________
+//
+// @ Closed
+//
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") app.quit();
+});
