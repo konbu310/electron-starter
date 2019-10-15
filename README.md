@@ -14,11 +14,11 @@ Electron × React × TypeScript なアプリを素早く作るためのテンプ
 
 ```shell
   # cloneはしないほうがいいと思う
-  degit konbu310/electron-starter ./PATH/TO/YOUR/APP
+  npx degit konbu310/electron-starter ./PATH/TO/YOUR/APP
 
   cd ./PATH/TO/YOUR/APP
 
-  # とりあえず最新する
+  # とりあえず最新にする
   yarn && yarn upgrade --latest
 
   # webpackでビルド (yarn run watch で監視)
