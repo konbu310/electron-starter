@@ -25,7 +25,7 @@ app.on("activate", () => {
   if (mainWindow) {
     app.show();
   } else {
-    createMainWindow();
+    mainWindow = createMainWindow();
   }
 });
 
