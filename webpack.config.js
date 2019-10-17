@@ -6,24 +6,18 @@ require("dotenv").config();
 
 // ______________________________________________________
 //
-// @ CONSTANTS
-//
-const isProduction = process.env.NODE_ENV === "production";
-
-// ______________________________________________________
-//
 // @ Webpack Config
 //
-module.exports = [
+module.exports = (env = { prod: false }) => [
   // ______________________________________________________
   //
   // @ Main Process
   //
   {
     name: "main",
-    mode: isProduction ? "production" : "development",
+    mode: env.prod ? "production" : "development",
     target: "electron-main",
-    devtool: isProduction ? "" : "source-map",
+    devtool: env.prod ? "" : "source-map",
     entry: path.join(__dirname, "src/main/main.ts"),
     node: {
       __dirname: false,
@@ -46,9 +40,9 @@ module.exports = [
   //
   {
     name: "renderer",
-    mode: isProduction ? "production" : "development",
+    mode: env.prod ? "production" : "development",
     target: "electron-renderer",
-    devtool: isProduction ? "" : "source-map",
+    devtool: env.prod ? "" : "source-map",
     entry: path.join(__dirname, "src/renderer/index.tsx"),
     output: {
       path: path.join(__dirname, "dist/"),

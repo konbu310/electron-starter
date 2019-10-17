@@ -7,9 +7,11 @@
   "license": "MIT",
   "scripts": {
     "build": "webpack",
-    "build:prod": "NODE_ENV=production webpack",
-    "build:mac": "yarn run build:prod && electron-builder",
+    "build:prod": "webpack --env.prod",
     "watch": "webpack --watch",
+    "watch:main": "webpack --config-name main --watch",
+    "watch:renderer": "webpack --config-name renderer --watch",
+    "bundle:mac": "yarn run build:prod && electron-builder",
     "start": "electron ."
   },
   "dependencies": {
