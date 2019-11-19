@@ -1,8 +1,6 @@
 import { app, BrowserWindow } from "electron";
 import { createMainWindow } from "./windowManager";
 
-app.setName("Electron Starter");
-
 let mainWindow: BrowserWindow | null = null;
 
 // ______________________________________________________
