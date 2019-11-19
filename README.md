@@ -7,7 +7,7 @@ Electron × React × TypeScript なアプリを素早く作るためのテンプ
 - Electron
 - TypeScript
 - React
-- webpack (ts-config-webpack-plugin)
+- webpack ([ts-config-webpack-plugin](https://github.com/namics/webpack-config-plugins))
 
 ## 使い方
 
