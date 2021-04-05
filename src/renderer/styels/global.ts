@@ -1,9 +1,8 @@
-import { injectGlobal } from "emotion";
+import { injectGlobal } from "@emotion/css";
 
 injectGlobal`
   * {
     box-sizing: border-box;
-    font-family: "Hiragino Maru Gothic ProN";
   }
   
   html {
@@ -13,5 +12,11 @@ injectGlobal`
   body {
    margin: 0;
    padding: 0;
+   font-family: "Helvetica Neue",
+    Arial,
+    "Hiragino Kaku Gothic ProN",
+    "Hiragino Sans",
+    Meiryo,
+    sans-serif;
   }
 `;

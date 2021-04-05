@@ -1,6 +1,5 @@
 import { BrowserWindow } from "electron";
-import loadDevtool from "electron-load-devtool";
-import * as path from "path";
+import path from "path";
 
 // ______________________________________________________
 //
@@ -17,17 +16,16 @@ export const createMainWindow = (): BrowserWindow => {
     width: 800,
     height: 600,
     webPreferences: {
-      nodeIntegration: true
-    }
+      nodeIntegration: false,
+      contextIsolation: true,
+    },
   });
 
-  //Devtoolの読み込み
-  loadDevtool(loadDevtool.REACT_DEVELOPER_TOOLS);
   !isProduction && mainWindow.webContents.openDevTools();
 
   mainWindow
     .loadFile(path.join(__dirname, "index.html"))
-    .catch(e => console.error(e));
+    .catch((e) => console.error(e));
 
   return mainWindow;
 };

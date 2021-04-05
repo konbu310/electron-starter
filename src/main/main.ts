@@ -1,5 +1,12 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, session } from "electron";
 import { createMainWindow } from "./windowManager";
+import os from "os";
+import path from "path";
+
+const reactDevToolsPath = path.join(
+  os.homedir(),
+  "/Library/Application Support/Google/Chrome/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/4.10.1_0"
+);
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -7,7 +14,13 @@ let mainWindow: BrowserWindow | null = null;
 //
 // @ Ready
 //
-app.on("ready", async () => {
+app.whenReady().then(async () => {
+  await session.defaultSession
+    .loadExtension(reactDevToolsPath, { allowFileAccess: true })
+    .catch((err) => {
+      console.error(err);
+    });
+
   mainWindow = createMainWindow();
 
   mainWindow.on("close", () => {
