@@ -11,22 +11,28 @@
     "watch": "webpack --watch",
     "watch:main": "webpack --config-name main --watch",
     "watch:renderer": "webpack --config-name renderer --watch",
-    "pack:mac": "yarn run build:prod && electron-builder",
-    "start": "electron ."
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
   },
   "dependencies": {
+    "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^7.0.2",
     "goober": "^2.0.37",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
   },
   "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.54",
+    "@electron-forge/maker-deb": "^6.0.0-beta.54",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.54",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
+    "@electron-forge/maker-zip": "^6.0.0-beta.54",
     "@types/node": "^14.14.37",
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.3",
     "clean-webpack-plugin": "^3.0.0",
     "electron": "^12.0.2",
-    "electron-builder": "^22.10.5",
     "html-webpack-plugin": "^5.3.1",
     "prettier": "^2.2.1",
     "ts-loader": "^8.1.0",
@@ -35,31 +41,20 @@
     "webpack-bundle-analyzer": "^4.4.0",
     "webpack-cli": "^4.6.0"
   },
-  "build": {
-    "productName": "Electron Starter",
-    "appId": "com.electron.electron-starter",
-    "directories": {
-      "output": "build"
-    },
-    "dmg": {
-      "contents": [
+  "config": {
+    "forge": {
+      "packagerConfig": {},
+      "makers": [
         {
-          "x": 410,
-          "y": 150,
-          "type": "link",
-          "path": "/Applications"
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
         },
         {
-          "x": 130,
-          "y": 150,
-          "type": "file"
+          "name": "@electron-forge/maker-deb",
+          "config": {}
         }
-      ]
-    },
-    "mac": {
-      "icon": "icons/icon.icns",
-      "target": [
-        "dmg"
       ]
     }
   }

@@ -34,7 +34,10 @@ const loadReactExtension = async () => {
 
 app.whenReady().then(async () => {
   createWindow();
-  await loadReactExtension();
+
+  if (!isProduction) {
+    await loadReactExtension();
+  }
 
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {
