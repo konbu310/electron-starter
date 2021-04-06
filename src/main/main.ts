@@ -1,57 +1,48 @@
 import { app, BrowserWindow, session } from "electron";
-import { createMainWindow } from "./windowManager";
 import os from "os";
 import path from "path";
+
+const isProduction = process.env.NODE_NEV === "production";
 
 const reactDevToolsPath = path.join(
   os.homedir(),
   "/Library/Application Support/Google/Chrome/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/4.10.1_0"
 );
 
-let mainWindow: BrowserWindow | null = null;
+const createWindow = () => {
+  const win = new BrowserWindow({
+    width: 800,
+    height: 600,
+  });
 
-// ______________________________________________________
-//
-// @ Ready
-//
-app.whenReady().then(async () => {
+  if (!isProduction) {
+    win.webContents.openDevTools();
+  }
+
+  win.loadFile("dist/index.html").catch((err) => console.error(err));
+};
+
+const loadReactExtension = async () => {
   await session.defaultSession
-    .loadExtension(reactDevToolsPath, { allowFileAccess: true })
+    .loadExtension(reactDevToolsPath, {
+      allowFileAccess: true,
+    })
     .catch((err) => {
       console.error(err);
     });
+};
 
-  mainWindow = createMainWindow();
+app.whenReady().then(async () => {
+  createWindow();
+  await loadReactExtension();
 
-  mainWindow.on("close", () => {
-    mainWindow = null;
+  app.on("activate", () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow();
+    }
   });
 });
 
-// ______________________________________________________
-//
-// @ Activate
-//
-app.on("activate", () => {
-  if (mainWindow) {
-    app.show();
-  } else {
-    mainWindow = createMainWindow();
-  }
-});
-
-// ______________________________________________________
-//
-// @ Quit
-//
-app.on("quit", () => {
-  app.quit();
-});
-
-// ______________________________________________________
-//
-// @ Closed
-//
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") app.quit();
 });

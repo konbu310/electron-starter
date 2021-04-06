@@ -10,7 +10,7 @@ module.exports = [
     name: "main",
     mode: isProduction ? "production" : "development",
     target: "electron-main",
-    devtool: isProduction ? undefined : "source-map",
+    devtool: isProduction ? undefined : "eval-source-map",
     entry: path.join(__dirname, "src/main/main.ts"),
     node: {
       __dirname: false,
@@ -35,14 +35,14 @@ module.exports = [
       new CleanWebpackPlugin({
         cleanOnceBeforeBuildPatterns: ["dist/main.js", "dist/main.js.map"],
       }),
-    ],
+    ].filter(Boolean),
   },
   // Renderer Process
   {
     name: "renderer",
     mode: isProduction ? "production" : "development",
     target: "electron-renderer",
-    devtool: isProduction ? undefined : "source-map",
+    devtool: isProduction ? undefined : "eval-source-map",
     entry: path.join(__dirname, "src/renderer/index.tsx"),
     output: {
       path: path.join(__dirname, "dist/"),
@@ -71,6 +71,6 @@ module.exports = [
         filename: "index.html",
         template: "src/template/index.html",
       }),
-    ],
+    ].filter(Boolean),
   },
 ];

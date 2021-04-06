@@ -1,6 +1,6 @@
-import { injectGlobal } from "@emotion/css";
+import { createGlobalStyles } from "goober/global";
 
-injectGlobal`
+createGlobalStyles`
   * {
     box-sizing: border-box;
   }
