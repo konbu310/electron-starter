@@ -8,12 +8,11 @@ const isProduction = process.env.NODE_ENV === "production";
 module.exports = [
   // Main
   {
+    ...common,
     name: "main",
-    mode: isProduction ? "production" : "development",
-    target: "electron-main",
-    devtool: isProduction ? "hidden-nosources-source-map" : "eval-source-map",
-    entry: path.join(__dirname, "src/main/main.ts"),
     context: __dirname,
+    target: "electron-main",
+    entry: path.join(__dirname, "src/main/main.ts"),
     node: {
       __dirname: false,
       __filename: false,
@@ -28,47 +27,25 @@ module.exports = [
           test: /.ts$/,
           exclude: /node_modules/,
           use: [
-            {
-              loader: "thread-loader",
-              options: {
-                name: "main-ts-loader-pool",
-                workers: 2,
-                workerParallelJobs: 80,
-                workerNodeArgs: ["--max-old-space-size=512"],
-              },
-            },
-            {
-              loader: "esbuild-loader",
-              options: {
-                loader: "ts",
-                minify: isProduction,
-                target: "es2020",
-              },
-            },
+            useThreadLoader({ name: "main-ts-pool" }),
+            useEsbuildLoader({ loader: "ts" }),
           ],
         },
       ],
-    },
-    resolve: {
-      modules: [path.resolve(__dirname, "node_modules")],
-      alias: {
-        "@": path.resolve(__dirname, "./src"),
-      },
-      extensions: [".ts", ".tsx", ".js", ".jsx"],
     },
     plugins: [
       new ForkTsCheckerWebpackPlugin(),
       new CleanWebpackPlugin({
         cleanOnceBeforeBuildPatterns: ["dist/main.js", "dist/main.js.map"],
       }),
-    ].filter(Boolean),
+    ],
   },
   // Renderer
   {
+    ...common,
     name: "renderer",
-    mode: isProduction ? "production" : "development",
+    context: __dirname,
     target: "electron-renderer",
-    devtool: isProduction ? "hidden-nosources-source-map" : "eval-source-map",
     entry: path.join(__dirname, "src/renderer/index.tsx"),
     output: {
       path: path.join(__dirname, "dist/"),
@@ -80,58 +57,22 @@ module.exports = [
           test: /.ts$/,
           exclude: /node_modules/,
           use: [
-            {
-              loader: "thread-loader",
-              options: {
-                name: "main-ts-loader-pool",
-                workers: 2,
-                workerParallelJobs: 80,
-                workerNodeArgs: ["--max-old-space-size=512"],
-              },
-            },
-            {
-              loader: "esbuild-loader",
-              options: {
-                loader: "ts",
-                minify: isProduction,
-                target: "es2020",
-              },
-            },
+            useThreadLoader({ name: "renderer-ts-pool" }),
+            useEsbuildLoader({ loader: "ts" }),
           ],
         },
         {
           test: /.tsx$/,
           exclude: /node_modules/,
           use: [
-            {
-              loader: "thread-loader",
-              options: {
-                name: "renderer-ts-loader-pool",
-                workers: 2,
-                workerParallelJobs: 80,
-                workerNodeArgs: ["--max-old-space-size=512"],
-              },
-            },
-            {
-              loader: "esbuild-loader",
-              options: {
-                loader: "tsx",
-                minify: isProduction,
-                target: "es2020",
-              },
-            },
+            useThreadLoader({ name: "renderer-tsx-pool" }),
+            useEsbuildLoader({ loader: "tsx" }),
           ],
         },
       ],
     },
-    resolve: {
-      modules: [path.resolve(__dirname, "node_modules")],
-      alias: {
-        "@": path.resolve(__dirname, "./src"),
-      },
-      extensions: [".ts", ".tsx", ".js", ".jsx"],
-    },
     plugins: [
+      new ForkTsCheckerWebpackPlugin(),
       new CleanWebpackPlugin({
         cleanOnceBeforeBuildPatterns: [
           "dist/renderer.js",
@@ -143,60 +84,38 @@ module.exports = [
         filename: "index.html",
         template: "src/template/index.html",
       }),
-    ].filter(Boolean),
+    ],
   },
   // Preload
   {
+    ...common,
     name: "preload",
-    mode: isProduction ? "production" : "development",
     target: "electron-preload",
     entry: path.join(__dirname, "src/common/preload.ts"),
     output: {
       path: path.join(__dirname, "dist/"),
       filename: "preload.js",
     },
-    devtool: isProduction ? "hidden-nosources-source-map" : "eval-source-map",
     module: {
       rules: [
         {
           test: /.ts$/,
           exclude: /node_modules/,
           use: [
-            {
-              loader: "thread-loader",
-              options: {
-                name: "preload-ts-loader-pool",
-                workers: 2,
-                workerParallelJobs: 80,
-                workerNodeArgs: ["--max-old-space-size=512"],
-              },
-            },
-            {
-              loader: "esbuild-loader",
-              options: {
-                loader: "ts",
-                minify: isProduction,
-                target: "es2020",
-              },
-            },
+            useThreadLoader({ name: "preload-ts-pool" }),
+            useEsbuildLoader({ loader: "ts" }),
           ],
         },
       ],
     },
-    resolve: {
-      modules: [path.resolve(__dirname, "node_modules")],
-      alias: {
-        "@": path.resolve(__dirname, "./src"),
-      },
-      extensions: [".ts", ".tsx", ".js", ".jsx"],
-    },
     plugins: [
+      new ForkTsCheckerWebpackPlugin(),
       new CleanWebpackPlugin({
         cleanOnceBeforeBuildPatterns: [
           "dist/preload.js",
           "dist/preload.js.map",
         ],
       }),
-    ].filter(Boolean),
+    ],
   },
 ];
