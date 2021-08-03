@@ -5,6 +5,45 @@ const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
 const isProduction = process.env.NODE_ENV === "production";
 
+const useThreadLoader = ({
+  name,
+  workers = 2,
+  workerParallelJobs = 80,
+}: {
+  name: string;
+  workers?: number;
+  workerParallelJobs?: number;
+}) => ({
+  loader: "thread-loader",
+  options: {
+    name,
+    workers,
+    workerParallelJobs,
+    workerNodeArgs: ["--max-old-space-size=512"],
+  },
+});
+
+const useEsbuildLoader = ({ loader }: { loader: "ts" | "tsx" }) => ({
+  loader: "esbuild-loader",
+  options: {
+    loader,
+    minify: isProduction,
+    target: "es2020",
+  },
+});
+
+const common = {
+  mode: isProduction ? "production" : "development",
+  devtool: isProduction ? "hidden-nosources-source-map" : "eval-source-map",
+  resolve: {
+    modules: [path.resolve(__dirname, "node_modules")],
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+    extensions: [".ts", ".tsx", ".js", ".jsx"],
+  },
+};
+
 module.exports = [
   // Main
   {
