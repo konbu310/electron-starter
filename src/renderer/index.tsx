@@ -1,7 +1,11 @@
 import React, { FC, useState } from "react";
 import ReactDOM from "react-dom";
-import { css } from "goober";
-import "./styels/global";
+import { css, setup } from "goober";
+import { GlobalStyle } from "./globalStyle";
+
+setup(React.createElement);
+
+const api = window.api;
 
 const styles = {
   main: css`
@@ -23,12 +27,16 @@ const Root: FC = () => {
         <input type="button" value="-" onClick={() => setCount((p) => p - 1)} />
         <input type="button" value="+" onClick={() => setCount((p) => p + 1)} />
       </div>
+      <div>
+        <button onClick={() => api.openElectronDocs()}>Electron Docs</button>
+      </div>
     </div>
   );
 };
 
 ReactDOM.render(
   <React.StrictMode>
+    <GlobalStyle />
     <Root />
   </React.StrictMode>,
   document.getElementById("root")

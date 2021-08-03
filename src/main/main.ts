@@ -1,18 +1,20 @@
 import { app, BrowserWindow, session } from "electron";
-import os from "os";
 import path from "path";
+import { loadReactDevtools } from "./loadReactDevtools";
+import { initializeIpcEvents, releaseIpcEvents } from "./ipcMain";
 
 const isProduction = process.env.NODE_NEV === "production";
-
-const reactDevToolsPath = path.join(
-  os.homedir(),
-  "/Library/Application Support/Google/Chrome/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/4.10.1_0"
-);
 
 const createWindow = () => {
   const win = new BrowserWindow({
     width: 800,
     height: 600,
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: true,
+      worldSafeExecuteJavaScript: true,
+      preload: path.join(__dirname, "preload.js"),
+    },
   });
 
   if (!isProduction) {
@@ -22,21 +24,12 @@ const createWindow = () => {
   win.loadFile("dist/index.html").catch((err) => console.error(err));
 };
 
-const loadReactExtension = async () => {
-  await session.defaultSession
-    .loadExtension(reactDevToolsPath, {
-      allowFileAccess: true,
-    })
-    .catch((err) => {
-      console.error(err);
-    });
-};
-
 app.whenReady().then(async () => {
   createWindow();
+  initializeIpcEvents();
 
   if (!isProduction) {
-    await loadReactExtension();
+    await loadReactDevtools().catch(console.error);
   }
 
   app.on("activate", () => {
@@ -47,5 +40,6 @@ app.whenReady().then(async () => {
 });
 
 app.on("window-all-closed", () => {
+  releaseIpcEvents();
   if (process.platform !== "darwin") app.quit();
 });
