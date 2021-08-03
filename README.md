@@ -5,23 +5,21 @@ Electron × React × TypeScript なアプリを素早く作るためのテンプ
 ## 使っているもの
 
 - Electron
+  - electron-forge 
 - TypeScript
 - React
-- webpack ([ts-config-webpack-plugin](https://github.com/namics/webpack-config-plugins))
+- webpack
 
 ## 使い方
 
 ```shell
   # cloneはしないほうがいいと思う
-  npx degit konbu310/electron-starter ./PATH/TO/YOUR/APP
+  npx degit konbu310/electron-starter ./my-electron-app
 
   # アプリのディレクトリに移動
-  cd ./PATH/TO/YOUR/APP
+  cd ./my-electron-app
 
-  # とりあえず最新にする
-  yarn upgrade --latest
-
-  # webpackでビルド
+  # webpack
   yarn run build
 
   # electronの起動
